@@ -16,7 +16,7 @@ import com.example.fran.ipau.viewmodels.PantallaPrincipalViewModel
 import kotlinx.android.synthetic.main.activity_pantalla_ini.*
 import kotlin.system.exitProcess
 
-class PantallaIniActivity : AppCompatActivity() {
+class CargaMenuActivity : AppCompatActivity() {
 
     lateinit var problematicas1List: ArrayList<Problematica1>
     lateinit var viewModel: PantallaPrincipalViewModel
