@@ -8,17 +8,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import com.example.fran.ipau.R
 import com.example.fran.ipau.models.Problematica1
 import com.example.fran.ipau.viewmodels.PantallaPrincipalViewModel
-import com.example.fran.ipau.viewmodels.ProblemasPrincipalesViewModel
 import kotlinx.android.synthetic.main.activity_pantalla_ini.*
-import kotlinx.android.synthetic.main.view_alert_dialog_error_conn.view.*
-import retrofit2.Retrofit
 import kotlin.system.exitProcess
 
 class PantallaIniActivity : AppCompatActivity() {
@@ -45,8 +40,11 @@ class PantallaIniActivity : AppCompatActivity() {
                 })
                 .create()
         viewModel = ViewModelProviders.of(this)[PantallaPrincipalViewModel::class.java]
-    }
+}
 
+    /**
+     * Este metedo consulta el menu inicial
+     */
     fun getMenu(){
         viewModel.getAllProblematicas1()
         viewModel.getData().observe(this, Observer<List<Problematica1>>{menuProb ->
