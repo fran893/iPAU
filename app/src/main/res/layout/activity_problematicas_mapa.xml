@@ -6,6 +6,7 @@
     tools:context=".views.ProblematicasMapaFragment"
     android:id="@+id/fragmentMap"
     android:tag="fragmentMap"
+    android:focusableInTouchMode="true"
     >
 
     <SearchView

@@ -17,14 +17,12 @@ import android.view.View
 import com.example.fran.ipau.R
 import com.example.fran.ipau.adapters.CustomExpandableListAdapter
 import com.example.fran.ipau.helper.FragmentNavigationManager
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashMap
 
 class SubProblematicasActivity : AppCompatActivity(){
-
     lateinit var mDrawerLayout: DrawerLayout
+
     lateinit var mDraweToggle: ActionBarDrawerToggle
     lateinit var mActivityTitle: String
     lateinit var items: ArrayList<String>
@@ -38,6 +36,7 @@ class SubProblematicasActivity : AppCompatActivity(){
     lateinit var bundle: Bundle
     lateinit var problematica1Descripcion: String
     lateinit var txtProb1: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +65,6 @@ class SubProblematicasActivity : AppCompatActivity(){
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setTitle(R.string.app_name)
-        //supportActionBar?.title = R.string.app_name.toString()
         navigationManager.showFragment(problematica1Descripcion)
     }
 
@@ -92,17 +90,26 @@ class SubProblematicasActivity : AppCompatActivity(){
                 super.onDrawerOpened(drawerView)
                 //getSupportActionBar().setTitle("EDMTDev");
                 invalidateOptionsMenu()
+                Log.d("ABRIENDO", "SE ABREEEEEEEEEEEE")
             }
 
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 //getSupportActionBar().setTitle(mActivityTitle);
                 invalidateOptionsMenu()
+                Log.d("CERRANDO", "SE CIERRAAAAAAAAAAA")
             }
         }
 
         mDraweToggle.isDrawerIndicatorEnabled = true
         mDrawerLayout.setDrawerListener(mDraweToggle)
+    }
+
+    fun setDrawerLocked(shouldLock: Boolean) {
+        if(shouldLock)
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        else
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
     fun addDrawesItem(){
@@ -114,14 +121,15 @@ class SubProblematicasActivity : AppCompatActivity(){
 
         expandableListView.setOnGroupCollapseListener { supportActionBar!!.setTitle(com.example.fran.ipau.R.string.app_name) }
 
-        expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
+        expandableListView.setOnChildClickListener { x, y, groupPosition, childPosition, z ->
             //change fragment when click on item
+            setDrawerLocked(true)
             var prob2 = problematicas2[groupPosition]
             var prob3 = prob2.subProblematicas3[childPosition]
             supportActionBar?.title = prob3.descripcion
             var mapaFragment = navigationManager.getFragmentByTag("fragmentMap") as ProblematicasMapaFragment
             mapaFragment.setProblematicas(prob2, prob3)
-            //parent.setVisibility(View.INVISIBLE);
+            setDrawerLocked(false)
             false
         }
     }

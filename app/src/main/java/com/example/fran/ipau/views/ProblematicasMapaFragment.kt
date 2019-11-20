@@ -80,6 +80,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onResume() {
+        mView.requestFocus()
         super.onResume()
     }
 
@@ -129,6 +130,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
             }
         })
         mMapView.getMapAsync(this)
+
     }
 
     object myInstace{
@@ -210,6 +212,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap?.setOnMapClickListener {
+            viewAlertDialog.descripcionProblematica.setText("")
             latLngMarker = it
             problematicaDialogAlert.show()
         }
