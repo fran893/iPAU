@@ -66,6 +66,9 @@ class CargaMenuActivity : AppCompatActivity() {
         })
     }
 
+    /*
+        Agregando comentario en prueba desarrollo
+     */
     override fun onStart() {
         super.onStart()
         getMenu()
