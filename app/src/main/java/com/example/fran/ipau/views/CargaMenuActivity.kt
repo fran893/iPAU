@@ -40,11 +40,8 @@ class CargaMenuActivity : AppCompatActivity() {
                 })
                 .create()
         viewModel = ViewModelProviders.of(this)[PantallaPrincipalViewModel::class.java]
-    }
+}
 
-    /**
-     *Este metodod obtiene el menu de la base de datos
-     */
     fun getMenu(){
         viewModel.getAllProblematicas1()
         viewModel.getData().observe(this, Observer<List<Problematica1>>{menuProb ->

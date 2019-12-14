@@ -196,7 +196,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_location_on_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_layers_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -206,8 +206,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="dc1514" />
-                            <entry key="outputName" value="ic_map_pin_filled_blue_48dp" />
+                            <entry key="outputName" value="caps_maps_24dp" />
                             <entry key="sourceFile" value="C:\Users\Fran" />
                           </map>
                         </option>
