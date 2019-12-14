@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import android.content.Intent
 import android.content.res.Configuration
+import android.support.v4.view.GravityCompat
 import com.example.fran.ipau.models.Problematica2
 import com.example.fran.ipau.Interfaces.NavigationManager
 import android.widget.ExpandableListAdapter
@@ -14,9 +15,11 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import com.example.fran.ipau.R
 import com.example.fran.ipau.adapters.CustomExpandableListAdapter
 import com.example.fran.ipau.helper.FragmentNavigationManager
+import com.example.fran.ipau.utils.Utilidades
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 
@@ -66,6 +69,8 @@ class SubProblematicasActivity : AppCompatActivity(){
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setTitle(R.string.app_name)
         navigationManager.showFragment(problematica1Descripcion)
+        mDrawerLayout.openDrawer(GravityCompat.START)
+
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
