@@ -126,8 +126,6 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
             else if(checkedId == tipoPredeterminado.id)
                 mMap.mapType =  GoogleMap.MAP_TYPE_NORMAL
         }
-        //mView.isClickable = false NO FUNCIONA
-        //Utilidades.hideKeyBoard(this.activity!!) NO FUNCIONA
         return mView
     }
 
@@ -277,7 +275,6 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
             problematicaDialogAlert.show()
         }
         ubicacionPorDefecto(googleMap)
-        googleMap?.uiSettings?.setAllGesturesEnabled(false)
         mView.isClickable = false
     }
 
@@ -312,11 +309,6 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
 
     fun guardarMarcadorProblematica(){
         if(problematica3 != null) {
-            //this.view?.isClickable = false
-            //mView.isClickable = false
-            //mMapView.isClickable = false
-
-            //mMap.uiSettings.
             var pl: ProblematicaLocation = ProblematicaLocation()
             pl.descripcion = "agregada desde app"
             pl.problematica3 = problematica3
@@ -331,7 +323,6 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
                 markerOption.title(pl.descripcion)
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngMarker))
                 mMap.addMarker(markerOption)
-                //mMap.uiSettings.setAllGesturesEnabled(true)
             })
         }else{
             errorProblematicaDialogAlert.show()
