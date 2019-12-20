@@ -42,6 +42,9 @@ class CargaMenuActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this)[PantallaPrincipalViewModel::class.java]
 }
 
+    /**
+     * Probando rama testing
+     */
     fun getMenu(){
         viewModel.getAllProblematicas1()
         viewModel.getData().observe(this, Observer<List<Problematica1>>{menuProb ->
