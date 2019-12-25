@@ -69,6 +69,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     private var latLngMarker: LatLng? = null //longitud y latitud que se obtienen cuando el usuario toca en el mapa
     private lateinit var hashMapMarker: HashMap<String, Marker>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var guardarProblematica: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.activity_problematicas_mapa, container, false)
@@ -270,9 +271,11 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap?.setOnMapClickListener {
-            viewAlertDialog.descripcionProblematica.setText("")
-            latLngMarker = it
-            problematicaDialogAlert.show()
+            if(guardarProblematica) {
+                viewAlertDialog.descripcionProblematica.setText("")
+                latLngMarker = it
+                problematicaDialogAlert.show()
+            }
         }
         ubicacionPorDefecto(googleMap)
         mView.isClickable = false
@@ -309,7 +312,8 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
 
     fun guardarMarcadorProblematica(){
         if(problematica3 != null) {
-            var pl: ProblematicaLocation = ProblematicaLocation()
+            guardarProblematica = false
+            var pl = ProblematicaLocation()
             pl.descripcion = "agregada desde app"
             pl.problematica3 = problematica3
             pl.latitud = latLngMarker!!.latitude
@@ -323,6 +327,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
                 markerOption.title(pl.descripcion)
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngMarker))
                 mMap.addMarker(markerOption)
+                guardarProblematica = true
             })
         }else{
             errorProblematicaDialogAlert.show()
