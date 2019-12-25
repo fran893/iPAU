@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.location.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
@@ -62,6 +63,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     private lateinit var problematicaDialogAlert: AlertDialog
     private lateinit var errorProblematicaDialogAlert: AlertDialog
     private lateinit var activateGps: AlertDialog
+    private lateinit var alertaPermisosAlertDialog: AlertDialog
     private lateinit var viewAlertDialog: View
     private lateinit var viewAlertDialogErrorProblematica : View
     private lateinit var alertDialogSelectLayoutMap: AlertDialog
@@ -95,6 +97,19 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
                 .setTitle("Tipo de Mapa")
                 //.setView(R.layout.view_select_layout_map)
                 .create()
+        alertaPermisosAlertDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Permisos de Ubicación iPau")
+                .setMessage("Para que la aplicación pueda mostrar su ubicacion actual" +
+                        " necesita que se le concedan los permisos de Ubicación. Para eso" +
+                        " ingrese a las opciones de permisos de la app")
+                .setPositiveButton("Ir a permisos de app", DialogInterface.OnClickListener{_,_ ->
+                    var intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    var uri: Uri = Uri.fromParts("package", activity!!.packageName,null)
+                    intent.data = uri
+                    activity!!.startActivity(intent)
+                })
+                .create()
         val rxPermissions : RxPermissions = RxPermissions(this)
         mView.setUbicacion.setOnClickListener {
             rxPermissions
@@ -106,7 +121,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
                         }else if (permission.shouldShowRequestPermissionRationale) {
                             Log.d("DENEGADO", "PERMISOS NO ACEPTADOS D:")
                         }else {
-                            Log.d("MAAAALO", "Entra a dame los permisos!! ")
+                            alertaPermisosAlertDialog.show()
                         }
                     }
         }
