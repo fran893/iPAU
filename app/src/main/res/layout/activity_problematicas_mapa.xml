@@ -8,26 +8,27 @@
     android:tag="fragmentMap"
     >
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/location"
-        android:queryHint="Calle N°, Ciudad, Provincia"
-        android:iconifiedByDefault="false"
-        android:layout_margin="10dp"
-        android:elevation="5dp"
-        android:background="@drawable/bg_round"
-        >
-    </SearchView>
-
 
     <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map"
-        >
+        android:focusableInTouchMode="true">
 
     </com.google.android.gms.maps.MapView>
+
+    <SearchView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_round"
+        android:elevation="5dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Calle N°, Ciudad, Provincia"></SearchView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/setLayout"
