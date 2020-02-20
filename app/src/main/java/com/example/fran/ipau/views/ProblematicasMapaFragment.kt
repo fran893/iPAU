@@ -45,17 +45,20 @@ import com.google.android.gms.maps.model.*
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.*
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.view.*
+import kotlinx.android.synthetic.main.desc_problematica_location.view.*
+import kotlinx.android.synthetic.main.fragment_fragment_content.*
 import kotlinx.android.synthetic.main.view_alert_dialog_add_problematica.view.descripcionProblematica
 import kotlinx.android.synthetic.main.view_select_layout_map.*
 import kotlinx.android.synthetic.main.view_select_layout_map.view.*
 import com.google.android.gms.maps.model.MarkerOptions as MarkerOptions1
 
-class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
+class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     val KEY_TITLE: String = "Titulo"
     private lateinit var mMap: GoogleMap
     private lateinit var marcador: Marker
     private lateinit var problematica2: Problematica2
+    private lateinit var problematicaLocation: ProblematicaLocation
     private var problematica3: Problematica3? = null
     private lateinit var mMapView: MapView
     private lateinit var mView: View
@@ -64,10 +67,12 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     private lateinit var errorProblematicaDialogAlert: AlertDialog
     private lateinit var activateGps: AlertDialog
     private lateinit var alertaPermisosAlertDialog: AlertDialog
+    private lateinit var alertDialogMarkerProb: AlertDialog
     private lateinit var viewAlertDialog: View
     private lateinit var viewAlertDialogErrorProblematica : View
     private lateinit var alertDialogSelectLayoutMap: AlertDialog
     private lateinit var viewAlertDialogSelectLayoutMap: View
+    private lateinit var viewDescProbLocation: View
     private var latLngMarker: LatLng? = null //longitud y latitud que se obtienen cuando el usuario toca en el mapa
     private lateinit var hashMapMarker: HashMap<String, Marker>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -125,6 +130,18 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
                         }
                     }
         }
+        viewDescProbLocation = LayoutInflater.from(this.activity).inflate(R.layout.desc_problematica_location,null)
+        alertDialogMarkerProb = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Problematica ya localizada")
+                .setView(viewDescProbLocation)
+                .setPositiveButton("Si", DialogInterface.OnClickListener{_,_ ->
+                    addCountProbLocation()
+                })
+                .setNegativeButton("No", DialogInterface.OnClickListener{_,_ ->
+
+                })
+                .create()
         viewAlertDialogSelectLayoutMap = LayoutInflater.from(this.activity).inflate(R.layout.view_select_layout_map,null)
         mView.setLayout.setOnClickListener {
             alertDialogSelectLayoutMap.show()
@@ -284,6 +301,7 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        googleMap?.setOnMarkerClickListener(this)
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap?.setOnMapClickListener {
             if(guardarProblematica) {
@@ -294,6 +312,35 @@ class ProblematicasMapaFragment : Fragment(), OnMapReadyCallback {
         }
         ubicacionPorDefecto(googleMap)
         mView.isClickable = false
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        /*alertDialogMarkerProb = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Titulo")
+                .setMessage("Mensaje")
+                .create()
+        alertDialogMarkerProb.show()*/
+        //to do
+        //llamar a metodo que busca problematica location
+        var latMarker: Double = marker!!.position.latitude
+        var lngMarker: Double = marker!!.position.longitude
+        viewModel.getLocation(latMarker, lngMarker)
+        viewModel.getProblematicaLocationLatLngLive().observe(this ,Observer<ProblematicaLocation> {location ->
+            problematicaLocation = location!!
+            viewDescProbLocation.descProblematica.text = problematicaLocation.descripcion
+            viewDescProbLocation.countMarker.text = problematicaLocation.cantVecesMarcada.toString()
+            alertDialogMarkerProb.show()
+        })
+
+        return true
+    }
+
+    fun addCountProbLocation(){
+        viewModel.updateMarkerCountLocProb(problematicaLocation.idProblematicaLocation.toLong())
+        viewModel.getUpdateCountProbLocationLive().observe(this, Observer {
+
+        })
     }
 
     fun addMarkersInit(problematicasLocations: List<ProblematicaLocation>){

@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface ApiProblematica1 {
 
-    @get:GET("v1/problematica1")
+    @get:GET("listarProblematicas")
     val allProblematicas1: Single<List<Problematica1>>
 
 }

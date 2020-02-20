@@ -7,6 +7,7 @@ public class ProblematicaLocation {
     private double longitud;
     private String descripcion;
     private Problematica3 problematica3;
+    private Integer cantVecesMarcada;
 
     public ProblematicaLocation(){}
 
@@ -48,5 +49,13 @@ public class ProblematicaLocation {
 
     public void setProblematica3(Problematica3 problematica3) {
         this.problematica3 = problematica3;
+    }
+
+    public Integer getCantVecesMarcada() {
+        return cantVecesMarcada;
+    }
+
+    public void setCantVecesMarcada(Integer cantVecesMarcada) {
+        this.cantVecesMarcada = cantVecesMarcada;
     }
 }
