@@ -19,13 +19,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".views.ProblemasPrincipalesActivity2"></activity>
+        <activity
+            android:name=".views.IntroCarouselActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionTransparentBar"
+            >
+
+        </activity>
+        <activity android:name=".views.ProblemasPrincipalesActivity2" />
         <activity android:name=".views.SubProblematicasActivity" />
         <activity
             android:name=".views.CargaMenuActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
 
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,11 +44,8 @@
         <activity
             android:name=".views.ProblemasPrincipalesActivity"
             android:label="@string/title_activity_problemas_principales"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <activity android:name=".views.LoginActivity">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".views.LoginActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

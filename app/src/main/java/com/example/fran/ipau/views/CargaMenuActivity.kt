@@ -52,8 +52,14 @@ class CargaMenuActivity : AppCompatActivity() {
                         ban = false
                 }
                 if(menuProb[0].descripcion != null) {
-                    viewModel.menuProblematicas = menuProb
+                    /*viewModel.menuProblematicas = menuProb
                     var intent = Intent(this, ProblemasPrincipalesActivity2::class.java)
+                    var bundle = Bundle()
+                    bundle.putParcelableArrayList("menuProblematicas", menuProb as java.util.ArrayList<out Parcelable>)
+                    intent.putExtras(bundle)
+                    startActivity(intent)*/
+                    viewModel.menuProblematicas = menuProb
+                    var intent = Intent(this, IntroCarouselActivity::class.java)
                     var bundle = Bundle()
                     bundle.putParcelableArrayList("menuProblematicas", menuProb as java.util.ArrayList<out Parcelable>)
                     intent.putExtras(bundle)
