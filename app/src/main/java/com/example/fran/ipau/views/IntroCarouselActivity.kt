@@ -58,22 +58,22 @@ class IntroCarouselActivity : AppCompatActivity() {
 
         btnNext.setOnClickListener {
             if(lastImage){
-                goToMenu()
+                goToLogin()
             }else{
                 introCarousel.setCurrentItem(positionCarousel + 1,true)
             }
         }
 
         btnSkip.setOnClickListener {
-            goToMenu()
+            goToLogin()
         }
     }
 
-    fun goToMenu(){
+    fun goToLogin(){
         var intent: Intent = intent
         var bundle = intent.extras
         problematicas1 = bundle.getParcelableArrayList("menuProblematicas")
-        intent = Intent(this, ProblemasPrincipalesActivity2::class.java)
+        intent = Intent(this, LoginActivity::class.java)
         bundle.putParcelableArrayList("menuProblematicas", problematicas1 as java.util.ArrayList<out Parcelable>)
         intent.putExtras(bundle)
         startActivity(intent)
