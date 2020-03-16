@@ -59,6 +59,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVer"
     kapt "com.google.dagger:dagger-compiler:$daggerVer"
 
+
 }
 repositories {
     mavenCentral()

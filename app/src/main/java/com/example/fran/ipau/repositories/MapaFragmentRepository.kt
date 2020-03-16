@@ -80,7 +80,7 @@ object MapaFragmentRepository{
                             location.postValue(it)
                         },
                         onError = { error ->
-                            Log.d("Error", "Error al sumar contador de marcaciones a problematica")
+                            Log.d("Error", "Error al sumar contador de marcaciones a problematica "+error.message)
                         }
                 )
         return location

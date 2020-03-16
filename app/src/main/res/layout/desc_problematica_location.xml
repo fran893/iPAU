@@ -3,44 +3,52 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/titleDesc"
-        android:text="Descripcion problemática: "
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        />
+        android:id="@+id/layoutDescProblematica"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleDesc"
+            android:text="Descripcion problemática: "
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/descProblematica"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_toRightOf="@+id/titleDesc"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/descProblematica"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/titleDesc"
+            />
+
+    </LinearLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/titleCount"
         android:text="Cantidad de veces marcada: "
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
         android:textStyle="bold"
-        android:layout_below="@+id/titleDesc"
+        android:layout_below="@+id/layoutDescProblematica"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/countMarker"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="10dp"
         android:layout_toRightOf="@+id/titleCount"
-        android:layout_below="@+id/descProblematica"
+        android:layout_below="@+id/layoutDescProblematica"
         />
 
     <TextView
@@ -48,8 +56,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/areYouSure"
         android:text="¿Desea re-marcar la problematica? "
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
         android:textStyle="bold"
         android:layout_below="@+id/titleCount"
         />

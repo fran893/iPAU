@@ -8,18 +8,16 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.location.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,8 +34,6 @@ import com.example.fran.ipau.models.ProblematicaLocation
 import com.example.fran.ipau.utils.Parametros
 import com.example.fran.ipau.utils.Utilidades
 import com.example.fran.ipau.viewmodels.ProblematicasMapaFragmentViewModel
-import com.google.android.gms.common.api.GoogleApi
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
@@ -46,10 +42,13 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.*
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.view.*
 import kotlinx.android.synthetic.main.desc_problematica_location.view.*
-import kotlinx.android.synthetic.main.fragment_fragment_content.*
+import kotlinx.android.synthetic.main.probress_bar_loading.*
+import kotlinx.android.synthetic.main.probress_bar_loading.view.*
 import kotlinx.android.synthetic.main.view_alert_dialog_add_problematica.view.descripcionProblematica
-import kotlinx.android.synthetic.main.view_select_layout_map.*
-import kotlinx.android.synthetic.main.view_select_layout_map.view.*
+import kotlinx.android.synthetic.main.view_alert_dialog_error_problematica.view.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import com.google.android.gms.maps.model.MarkerOptions as MarkerOptions1
 
 class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -76,7 +75,11 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     private var latLngMarker: LatLng? = null //longitud y latitud que se obtienen cuando el usuario toca en el mapa
     private lateinit var hashMapMarker: HashMap<String, Marker>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var alertDialogNoInternet: AlertDialog
     private var guardarProblematica: Boolean = true
+    private lateinit var progressLoadinSuccessDialog: AlertDialog
+    private lateinit var viewAlertPorgressLoadingSuccess: View
+    private lateinit var viewAlertDialogError: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.activity_problematicas_mapa, container, false)
@@ -91,11 +94,12 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 })
                 .create()
         viewAlertDialogErrorProblematica = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_error_problematica,null)
+        viewAlertDialogError = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_error_problematica, null)
         errorProblematicaDialogAlert = AlertDialog.Builder(this.activity!!)
                 .setCancelable(true)
                 .setTitle("Error")
                 .setIcon(R.drawable.ic_error_24dp)
-                .setView(R.layout.view_alert_dialog_error_problematica)
+                .setView(viewAlertDialogError)
                 .create()
         alertDialogSelectLayoutMap = AlertDialog.Builder(this.activity!!)
                 .setCancelable(true)
@@ -115,10 +119,21 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                     activity!!.startActivity(intent)
                 })
                 .create()
-        val rxPermissions : RxPermissions = RxPermissions(this)
+        alertDialogNoInternet = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Sin Internet")
+                .setMessage("Debe haber conexión a internet")
+                .create()
+        viewAlertPorgressLoadingSuccess = LayoutInflater.from(this.activity).inflate(R.layout.probress_bar_loading, null)
+        progressLoadinSuccessDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(false)
+                .setView(viewAlertPorgressLoadingSuccess)
+                .create()
+        val rxPermissions = RxPermissions(this)
         mView.setUbicacion.setOnClickListener {
+            Log.d("get Location btn","busca location")
             rxPermissions
-                    .requestEach(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .requestEach(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                     .subscribe { permission ->
                         if (permission.granted) {
                             Log.d("ACEPTADOS", "PERMISOS ACEPTADOS!!! =D")
@@ -231,9 +246,10 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 activateGps.show()
             }
             if(!isOnline()){
-                Log.d("SIN INTERNET", "NO HAY DATOS O WIFI")
+                alertDialogNoInternet.show()
             }
         }else{
+
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this!!.activity!!)
             fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
@@ -241,10 +257,30 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                         if (location != null) {
                             agregarMarcador(location.latitude, location.longitude)
                         }else{
-                            Log.d("NULLLL","LOCATION ES NULLL D:")
+                            var lastKnowLocation = getLastKnownLocation(lm)
+                            if(lastKnowLocation != null)
+                                agregarMarcador(lastKnowLocation.latitude, lastKnowLocation.longitude)
+
                         }
                     }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getLastKnownLocation(mLocation: LocationManager): Location? {
+        var bestLocation: Location? = null
+        var providers: List<String> = mLocation.getProviders(true)
+        for (provider: String in providers) {
+            var l = mLocation.getLastKnownLocation(provider)
+            if (l == null)
+                continue
+            else {
+                if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
+                    bestLocation = l
+                }
+            }
+        }
+        return bestLocation
     }
 
     fun isOnline(): Boolean {
@@ -268,7 +304,10 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         mMap.clear()
         this.problematica2 = prob2
         this.problematica3 = prob3
-        getAllProblematica3()
+        if(isOnline())
+            getAllProblematica3()
+        else
+            alertDialogNoInternet.show()
     }
 
     fun ubicacionPorDefecto(googleMap: GoogleMap?){
@@ -304,11 +343,14 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         googleMap?.setOnMarkerClickListener(this)
         googleMap?.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap?.setOnMapClickListener {
-            if(guardarProblematica) {
-                viewAlertDialog.descripcionProblematica.setText("")
-                latLngMarker = it
-                problematicaDialogAlert.show()
-            }
+            if(isOnline()) {
+                if (guardarProblematica) {
+                    viewAlertDialog.descripcionProblematica.setText("")
+                    latLngMarker = it
+                    problematicaDialogAlert.show()
+                }
+            }else
+                alertDialogNoInternet.show()
         }
         ubicacionPorDefecto(googleMap)
         mView.isClickable = false
@@ -374,23 +416,40 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
 
     fun guardarMarcadorProblematica(){
         if(problematica3 != null) {
-            guardarProblematica = false
-            var pl = ProblematicaLocation()
-            pl.descripcion = "agregada desde app"
-            pl.problematica3 = problematica3
-            pl.latitud = latLngMarker!!.latitude
-            pl.longitud = latLngMarker!!.longitude
             var descripcion: String = viewAlertDialog.descripcionProblematica.text.toString()
-            pl.descripcion = descripcion
-            viewModel.guardarProblematicaLocation(pl)
-            viewModel.getSaveLocationLiveData().observe(this, Observer<ProblematicaLocation> { location ->
-                var markerOption: MarkerOptions1 = getMarkerOption(problematica2.idProblematica2)
-                markerOption.position(latLngMarker!!)
-                markerOption.title(pl.descripcion)
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngMarker))
-                mMap.addMarker(markerOption)
-                guardarProblematica = true
-            })
+            if(descripcion.length < 70){
+                progressLoadinSuccessDialog.show()
+                progressLoadinSuccessDialog.window.setLayout(650,400)
+                progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
+                progressLoadinSuccessDialog.checkICon.visibility = View.GONE
+                progressLoadinSuccessDialog.btnOk.visibility = View.GONE
+                viewAlertPorgressLoadingSuccess.textLoadModal.text = "Agregando Problemática"
+                guardarProblematica = false
+                var pl = ProblematicaLocation()
+                pl.problematica3 = problematica3
+                pl.latitud = latLngMarker!!.latitude
+                pl.longitud = latLngMarker!!.longitude
+                pl.descripcion = descripcion
+                viewModel.guardarProblematicaLocation(pl)
+                viewModel.getSaveLocationLiveData().observe(this, Observer<ProblematicaLocation> { location ->
+                    var markerOption: MarkerOptions1 = getMarkerOption(problematica2.idProblematica2)
+                    markerOption.position(latLngMarker!!)
+                    markerOption.title(pl.descripcion)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngMarker))
+                    viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
+                    progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
+                    progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
+                    progressLoadinSuccessDialog.btnOk.setOnClickListener {
+                        progressLoadinSuccessDialog.dismiss()
+                    }
+                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica agregada con éxito"
+                    mMap.addMarker(markerOption)
+                    guardarProblematica = true
+                })
+            }else{
+                viewAlertDialogError.tvError.text = "La máxima cantidad de cáracteres para la descripción es de 70."
+                errorProblematicaDialogAlert.show()
+            }
         }else{
             errorProblematicaDialogAlert.show()
         }

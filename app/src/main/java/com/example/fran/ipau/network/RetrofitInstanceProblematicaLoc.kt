@@ -8,11 +8,18 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitInstanceProblematicaLoc {
 
-    //private val BASE_URL = "http://192.168.1.103:8080/ApiRestFull/" desa
     private val BASE_URL = "http://ipau-prob-location.us-east-2.elasticbeanstalk.com/" //test
+    private val BASE_URL_LOGIN = "http://192.168.1.106:8090/"
+
     private val okHttpClient = OkHttpClient.Builder()
             .readTimeout(120, TimeUnit.SECONDS)
             .connectTimeout(120, TimeUnit.SECONDS)
+            .build()
+
+    private val httpClientLogin = OkHttpClient.Builder()
+            .readTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .addInterceptor(BasicAuthInterceptor("ipau_app","IpauApp.Android2019"))
             .build()
 
     fun createApi(): Retrofit {
@@ -21,6 +28,15 @@ object RetrofitInstanceProblematicaLoc {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
+                .build()
+    }
+    
+    fun createApiLogin(): Retrofit {
+        return Retrofit.Builder()
+                .baseUrl(BASE_URL_LOGIN)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClientLogin)
                 .build()
     }
 

@@ -1,10 +1,13 @@
 package com.example.fran.ipau.views
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v4.view.GravityCompat
 import com.example.fran.ipau.models.Problematica2
 import com.example.fran.ipau.Interfaces.NavigationManager
@@ -126,7 +129,7 @@ class SubProblematicasActivity : AppCompatActivity(){
 
         expandableListView.setOnGroupCollapseListener { supportActionBar!!.setTitle(com.example.fran.ipau.R.string.app_name) }
 
-        expandableListView.setOnChildClickListener { x, y, groupPosition, childPosition, z ->
+        expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             //change fragment when click on item
             setDrawerLocked(true)
             var prob2 = problematicas2[groupPosition]
@@ -164,8 +167,5 @@ class SubProblematicasActivity : AppCompatActivity(){
             return true
         return super.onOptionsItemSelected(item)
     }
-
-
-
 
 }
