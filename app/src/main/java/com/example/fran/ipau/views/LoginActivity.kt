@@ -54,8 +54,8 @@ class LoginActivity : AppCompatActivity(){
                 })
             }
         }
-        link_guest_sign.setOnClickListener {
-            goToMenu()
+        link_register.setOnClickListener {
+
         }
     }
 

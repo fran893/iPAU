@@ -73,7 +73,7 @@ class IntroCarouselActivity : AppCompatActivity() {
         var intent: Intent = intent
         var bundle = intent.extras
         problematicas1 = bundle.getParcelableArrayList("menuProblematicas")
-        intent = Intent(this, LoginActivity::class.java)
+        intent = Intent(this, InitialActivity::class.java)
         bundle.putParcelableArrayList("menuProblematicas", problematicas1 as java.util.ArrayList<out Parcelable>)
         intent.putExtras(bundle)
         startActivity(intent)

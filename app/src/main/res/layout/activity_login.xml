@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
     <LinearLayout
         android:orientation="vertical"
@@ -11,7 +12,8 @@
         android:layout_height="wrap_content"
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        >
 
         <ImageView android:src="@drawable/logo2"
             android:layout_width="100dp"
@@ -65,11 +67,11 @@
             android:gravity="center"
             android:textSize="16dip"/>
 
-        <TextView android:id="@+id/link_guest_sign"
+        <TextView android:id="@+id/link_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="@string/guestSingIn"
+            android:text="@string/register"
             android:gravity="center"
             android:textSize="16dip"
             android:textStyle=""

@@ -23,7 +23,9 @@
 
     <string name="appName">iPAU</string>
 
-    <string name="guestSingIn"><u>Ingresar como Invitado</u></string>
+    <string name="guestSingIn">Ingresar como Invitado</string>
     <string name="olvidoSuContraseña"><u>¿Olvidó su contraseña?</u></string>
+    <string name="register"><u>Registrarse</u></string>
+
 
 </resources>
