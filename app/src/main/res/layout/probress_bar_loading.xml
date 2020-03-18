@@ -41,6 +41,7 @@
         android:layout_below="@+id/cargandoTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
         />
 
     <Button
@@ -51,8 +52,8 @@
         android:id="@+id/btnOk"
         android:layout_below="@+id/textLoadModal"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
         />
 
 </RelativeLayout>

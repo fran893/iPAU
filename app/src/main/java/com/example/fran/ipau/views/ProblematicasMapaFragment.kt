@@ -305,9 +305,10 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         mMap.clear()
         this.problematica2 = prob2
         this.problematica3 = prob3
-        if(isOnline())
+        if(isOnline()) {
+            openLoadModal("Cargando problematicas: " + prob3.descripcion)
             getAllProblematica3()
-        else
+        }else
             alertDialogNoInternet.show()
     }
 
@@ -393,6 +394,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         viewModel.getInitProblematicaLocation().observe(this,Observer<List<ProblematicaLocation>>{ locationsInit ->
             if (locationsInit != null) {
                 addMarkersInit(locationsInit)
+                closeLoadModal()
             }
         })
     }
@@ -447,6 +449,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     }
 
     fun addOptionOkLoadModal(text: String) {
+        progressLoadinSuccessDialog.show()
         viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
         progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
         progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
