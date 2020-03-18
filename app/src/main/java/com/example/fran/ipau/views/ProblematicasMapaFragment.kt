@@ -104,7 +104,6 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         alertDialogSelectLayoutMap = AlertDialog.Builder(this.activity!!)
                 .setCancelable(true)
                 .setTitle("Tipo de Mapa")
-                //.setView(R.layout.view_select_layout_map)
                 .create()
         alertaPermisosAlertDialog = AlertDialog.Builder(this.activity!!)
                 .setCancelable(true)
@@ -152,11 +151,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 .setTitle("Problematica ya localizada")
                 .setView(viewDescProbLocation)
                 .setPositiveButton("Si", DialogInterface.OnClickListener{_,_ ->
-                    progressLoadinSuccessDialog.show()
-                    progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
-                    progressLoadinSuccessDialog.checkICon.visibility = View.GONE
-                    progressLoadinSuccessDialog.btnOk.visibility = View.GONE
-                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Re marcando problemática"
+                    openLoadModal("Re marcando problemática")
                     addCountProbLocation()
                 })
                 .setNegativeButton("No", DialogInterface.OnClickListener{_,_ ->
@@ -363,10 +358,12 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
+        openLoadModal("Cargando Problemática")
         var latMarker: Double = marker!!.position.latitude
         var lngMarker: Double = marker!!.position.longitude
         viewModel.getLocation(latMarker, lngMarker)
         viewModel.getProblematicaLocationLatLngLive().observe(this ,Observer<ProblematicaLocation> {location ->
+            closeLoadModal();
             problematicaLocation = location!!
             viewDescProbLocation.descProblematica.text = problematicaLocation.descripcion
             viewDescProbLocation.countMarker.text = problematicaLocation.cantVecesMarcada.toString()
@@ -379,13 +376,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     fun addCountProbLocation(){
         viewModel.updateMarkerCountLocProb(problematicaLocation.idProblematicaLocation.toLong())
         viewModel.getUpdateCountProbLocationLive().observe(this, Observer {
-            viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
-            progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
-            progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
-            viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica remarcada con éxito"
-            progressLoadinSuccessDialog.btnOk.setOnClickListener {
-                progressLoadinSuccessDialog.dismiss()
-            }
+            addOptionOkLoadModal("Problématica remarcada con éxito")
         })
     }
 
@@ -408,7 +399,6 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
 
     fun getMarkerOption(prob2: Int): MarkerOptions1{
         var markerOption: MarkerOptions1 = MarkerOptions1()
-        //var icon: Bitmap = Bitmap.createBitmap(R.drawable.agua_potable_prob)
         when(prob2){
             Parametros.subProbAguaPotable -> {
                 var drawable: Drawable? = ContextCompat.getDrawable(this!!.context!!, R.drawable.agua_potable_prob)
@@ -422,12 +412,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         if(problematica3 != null) {
             var descripcion: String = viewAlertDialog.descripcionProblematica.text.toString()
             if(descripcion.length < 70){
-                progressLoadinSuccessDialog.show()
-                //-progressLoadinSuccessDialog.window.setLayout(650,400)
-                progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
-                progressLoadinSuccessDialog.checkICon.visibility = View.GONE
-                progressLoadinSuccessDialog.btnOk.visibility = View.GONE
-                viewAlertPorgressLoadingSuccess.textLoadModal.text = "Agregando Problemática"
+                openLoadModal("Agregando Problemática")
                 guardarProblematica = false
                 var pl = ProblematicaLocation()
                 pl.problematica3 = problematica3
@@ -440,13 +425,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                     markerOption.position(latLngMarker!!)
                     markerOption.title(pl.descripcion)
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngMarker))
-                    viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
-                    progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
-                    progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
-                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica agregada con éxito"
-                    progressLoadinSuccessDialog.btnOk.setOnClickListener {
-                        progressLoadinSuccessDialog.dismiss()
-                    }
+                    addOptionOkLoadModal("Problématica agregada con éxito")
                     mMap.addMarker(markerOption)
                     guardarProblematica = true
                 })
@@ -457,5 +436,27 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         }else{
             errorProblematicaDialogAlert.show()
         }
+    }
+
+    fun openLoadModal(texto: String) {
+        progressLoadinSuccessDialog.show()
+        progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
+        progressLoadinSuccessDialog.checkICon.visibility = View.GONE
+        progressLoadinSuccessDialog.btnOk.visibility = View.GONE
+        viewAlertPorgressLoadingSuccess.textLoadModal.text = texto
+    }
+
+    fun addOptionOkLoadModal(text: String) {
+        viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
+        progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
+        progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
+        viewAlertPorgressLoadingSuccess.textLoadModal.text = text
+        progressLoadinSuccessDialog.btnOk.setOnClickListener {
+            progressLoadinSuccessDialog.dismiss()
+        }
+    }
+
+    fun closeLoadModal(){
+        progressLoadinSuccessDialog.dismiss()
     }
 }
