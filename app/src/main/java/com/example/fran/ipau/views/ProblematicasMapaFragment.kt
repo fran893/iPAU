@@ -129,6 +129,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 .setCancelable(false)
                 .setView(viewAlertPorgressLoadingSuccess)
                 .create()
+
         val rxPermissions = RxPermissions(this)
         mView.setUbicacion.setOnClickListener {
             Log.d("get Location btn","busca location")
@@ -151,6 +152,11 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 .setTitle("Problematica ya localizada")
                 .setView(viewDescProbLocation)
                 .setPositiveButton("Si", DialogInterface.OnClickListener{_,_ ->
+                    progressLoadinSuccessDialog.show()
+                    progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
+                    progressLoadinSuccessDialog.checkICon.visibility = View.GONE
+                    progressLoadinSuccessDialog.btnOk.visibility = View.GONE
+                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Re marcando problemática"
                     addCountProbLocation()
                 })
                 .setNegativeButton("No", DialogInterface.OnClickListener{_,_ ->
@@ -357,14 +363,6 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
-        /*alertDialogMarkerProb = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Titulo")
-                .setMessage("Mensaje")
-                .create()
-        alertDialogMarkerProb.show()*/
-        //to do
-        //llamar a metodo que busca problematica location
         var latMarker: Double = marker!!.position.latitude
         var lngMarker: Double = marker!!.position.longitude
         viewModel.getLocation(latMarker, lngMarker)
@@ -381,7 +379,13 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     fun addCountProbLocation(){
         viewModel.updateMarkerCountLocProb(problematicaLocation.idProblematicaLocation.toLong())
         viewModel.getUpdateCountProbLocationLive().observe(this, Observer {
-
+            viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
+            progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
+            progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
+            viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica remarcada con éxito"
+            progressLoadinSuccessDialog.btnOk.setOnClickListener {
+                progressLoadinSuccessDialog.dismiss()
+            }
         })
     }
 
@@ -419,7 +423,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
             var descripcion: String = viewAlertDialog.descripcionProblematica.text.toString()
             if(descripcion.length < 70){
                 progressLoadinSuccessDialog.show()
-                progressLoadinSuccessDialog.window.setLayout(650,400)
+                //-progressLoadinSuccessDialog.window.setLayout(650,400)
                 progressLoadinSuccessDialog.progressBarLoading.visibility = View.VISIBLE
                 progressLoadinSuccessDialog.checkICon.visibility = View.GONE
                 progressLoadinSuccessDialog.btnOk.visibility = View.GONE
@@ -439,10 +443,10 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                     viewAlertPorgressLoadingSuccess.progressBarLoading.visibility = View.INVISIBLE
                     progressLoadinSuccessDialog.checkICon.visibility = View.VISIBLE
                     progressLoadinSuccessDialog.btnOk.visibility = View.VISIBLE
+                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica agregada con éxito"
                     progressLoadinSuccessDialog.btnOk.setOnClickListener {
                         progressLoadinSuccessDialog.dismiss()
                     }
-                    viewAlertPorgressLoadingSuccess.textLoadModal.text = "Problématica agregada con éxito"
                     mMap.addMarker(markerOption)
                     guardarProblematica = true
                 })
