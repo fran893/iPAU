@@ -390,7 +390,7 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     }
 
     fun getAllProblematica3(){
-        problematica3?.idProblematica3?.let { viewModel.getInitProblematicasLocation(it) }
+        problematica3?.idProblematica3?.let { viewModel.getInitProblematicasLocation(false, it) }
         viewModel.getInitProblematicaLocation().observe(this,Observer<List<ProblematicaLocation>>{ locationsInit ->
             if (locationsInit != null) {
                 addMarkersInit(locationsInit)

@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.fran.ipau.apis.ApiProblematica1
 import com.example.fran.ipau.models.Problematica1
-import com.example.fran.ipau.network.RetrofitInstanceProblematicas
+import com.example.fran.ipau.network.RetrofitInstanceProblematicaLoc
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +16,7 @@ object ProblematicasPrincipalesRepository{
     fun getProblematicas1(): MutableLiveData<List<Problematica1>>{
         //var menuProblematicas : List<Problematica1> = arrayListOf()
         val menu = MutableLiveData<List<Problematica1>>()
-        val retrofit = RetrofitInstanceProblematicas.createApi()
+        val retrofit = RetrofitInstanceProblematicaLoc.createApi()
         val service = retrofit.create(ApiProblematica1::class.java)
         service.allProblematicas1
                 .subscribeOn(Schedulers.computation())

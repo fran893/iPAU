@@ -8,7 +8,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitInstanceProblematicaLoc {
 
-    private val BASE_URL = "http://ipau-prob-location.us-east-2.elasticbeanstalk.com/" //test
+    private val BASE_URL_DESA = "http://192.168.1.106:8090/"
+    private val BASE_URL = "http://ec2-3-14-28-90.us-east-2.compute.amazonaws.com:8090/" //test
     private val BASE_URL_LOGIN = "http://192.168.1.106:8090/"
 
     private val okHttpClient = OkHttpClient.Builder()

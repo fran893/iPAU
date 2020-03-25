@@ -31,9 +31,9 @@ class ProblematicasMapaFragmentViewModel : ViewModel() {
         return addsMarker
     }
 
-    fun getInitProblematicasLocation(idProb3 : Int) {
+    fun getInitProblematicasLocation(isPrivacy: Boolean, idProb3 : Int) {
         repositoryMapaFragmet = MapaFragmentRepository
-        initProblematicaLocation = repositoryMapaFragmet.getAllProblematicas3(idProb3)
+        initProblematicaLocation = repositoryMapaFragmet.getAllProblematicas3(isPrivacy, idProb3)
     }
 
     fun getInitProblematicaLocation(): MutableLiveData<List<ProblematicaLocation>>{

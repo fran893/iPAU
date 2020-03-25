@@ -8,19 +8,22 @@ import retrofit2.http.*
 
 interface ApiProblematicaLoc {
 
-    @get:GET("problematicasLocation")
+    @get:GET("api/probLocation/problematicasLocation")
     val allProblematicasLoc: Single<List<ProblematicaLocation>>
 
-    @GET("locationsProb3/{idProb3}")
+    @GET("api/probLocation/locationsProb3/{idProb3}")
     fun getProblematicasLocProb3(@Path("idProb3") idProb3: Int): Single<List<ProblematicaLocation>>
 
-    @POST("addProblematicaLocation")
+    @POST("api/probLocation/addProblematicaLocation")
     fun saveLocation(@Body problematicaLocation: ProblematicaLocation): Single<ProblematicaLocation>
 
-    @GET("getLocation/{lat}/{long}")
+    @GET("api/probLocation/getLocation/{lat}/{long}")
     fun getProblematicaLocation(@Path("lat") lat: Double, @Path("long") long: Double): Single<ProblematicaLocation>
 
-    @PUT("updateCountMarker/{idProbLocation}")
+    @PUT("api/probLocation/updateCountMarker/{idProbLocation}")
     fun updateCountMarkerProbLocation(@Path("idProbLocation") idProbLocation: Long): Single<ProblematicaLocation>
+
+    @GET("api/probLocation/problematicasLocationPerPrivacy/{isPrivacy}/{idProb3}")
+    fun getProblematicaLocByPrivacy(@Path("isPrivacy") isPrivacy: Boolean, @Path("idProb3") idProb3: Int): Single<List<ProblematicaLocation>>
 
 }
