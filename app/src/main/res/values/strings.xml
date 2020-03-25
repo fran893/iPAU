@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">iPAU</string>
+    <string name="title_activity_problemas_principales">ProblemasPrincipalesActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_problematicas_mapa_fragment">Map</string>
+    <string name="title_activity_sub_problematica">SubProblematicaActivity</string>
+    <string name="prob1Menu">Saneamiento</string>
+    <string name="prob2Menu">Contaminación</string>
+    <string name="prob3Menu">Zoonosis</string>
+    <string name="prob4Menu">Espacios verdes y arbolado</string>
+    <string name="prob5Menu">Infraestructura pública</string>
+    <string name="prob6Menu">Otros</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="appName">iPAU</string>
+</resources>

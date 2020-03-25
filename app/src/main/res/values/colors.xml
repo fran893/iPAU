@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="dividerColor">#80CBC4</color>
+    <color name="list_item_title">#AAAAAA</color>
+    <color name="list_group_title">#2B7699</color>
+
+    <color name="probSaneamiento">#FF2B7699</color>
+    <color name="probContaminacion">#FFB9C421</color>
+    <color name="probZoonosis">#FFC48821</color>
+    <color name="probEspVerdes">#FF48A316</color>
+    <color name="probInfPublica">#FF918E8E</color>
+
+</resources>
