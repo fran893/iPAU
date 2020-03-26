@@ -2,6 +2,7 @@ package com.example.fran.ipau.views
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -46,11 +47,20 @@ class LoginActivity : AppCompatActivity(){
                 Toast.makeText(this, "Debe ingresar email y contraseña", Toast.LENGTH_LONG).show()
             }else{
                 progress.show()
-                progress.window.setLayout(600,400)
+                //progress.window.setLayout(600,400)
                 viewModel.login(email,password)
                 viewModel.getData().observe(this, Observer<Login>{ loginSuccess ->
                     Log.d("TOKEN","TOKEN "+loginSuccess?.access_token)
+                    val sharedPref = this?.getSharedPreferences("login",Context.MODE_PRIVATE)
+                    var editor = sharedPref.edit()
+                    editor.putString("token",loginSuccess?.access_token)
+                    editor.putString("nombre_user",loginSuccess?.nombre)
+                    editor.putString("apellido_user",loginSuccess?.apellido)
+                    editor.putString("correo_user",loginSuccess?.correo)
+                    editor.commit()
                     progress.dismiss()
+                    goToMenu()
+
                 })
             }
         }

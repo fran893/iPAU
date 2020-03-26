@@ -28,6 +28,7 @@ import android.widget.RadioGroup
 import android.widget.SearchView
 import android.widget.Toast
 import com.example.fran.ipau.R
+import com.example.fran.ipau.models.Login
 import com.example.fran.ipau.models.Problematica2
 import com.example.fran.ipau.models.Problematica3
 import com.example.fran.ipau.models.ProblematicaLocation
@@ -176,6 +177,20 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                 mMap.mapType =  GoogleMap.MAP_TYPE_NORMAL
         }
         return mView
+    }
+
+    fun getToken(): Login {
+        var login = Login()
+        val sharedPref = this.activity?.getSharedPreferences("login",Context.MODE_PRIVATE)
+        val token = sharedPref!!.getString("token","")
+        val nombreUser = sharedPref!!.getString("nombre_user","")
+        val apellido_user = sharedPref!!.getString("apellido_user","")
+        val correo_user = sharedPref!!.getString("correo_user","")
+        login.access_token = token
+        login.nombre = nombreUser
+        login.apellido = apellido_user
+        login.correo = correo_user
+        return login
     }
 
     override fun onResume() {

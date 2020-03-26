@@ -10,7 +10,6 @@ object RetrofitInstanceProblematicaLoc {
 
     private val BASE_URL_DESA = "http://192.168.1.106:8090/"
     private val BASE_URL = "http://ec2-3-14-28-90.us-east-2.compute.amazonaws.com:8090/" //test
-    private val BASE_URL_LOGIN = "http://192.168.1.106:8090/"
 
     private val okHttpClient = OkHttpClient.Builder()
             .readTimeout(120, TimeUnit.SECONDS)
@@ -34,7 +33,7 @@ object RetrofitInstanceProblematicaLoc {
     
     fun createApiLogin(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL_LOGIN)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientLogin)
