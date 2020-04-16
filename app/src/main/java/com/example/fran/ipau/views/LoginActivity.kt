@@ -57,6 +57,9 @@ class LoginActivity : AppCompatActivity(){
                     editor.putString("nombre_user",loginSuccess?.nombre)
                     editor.putString("apellido_user",loginSuccess?.apellido)
                     editor.putString("correo_user",loginSuccess?.correo)
+                    editor.putString("id_user", loginSuccess?.id)
+                    Log.d("id_user ",loginSuccess?.id)
+                    Log.d("id_correo ",loginSuccess?.correo)
                     editor.commit()
                     progress.dismiss()
                     goToMenu()
@@ -76,6 +79,7 @@ class LoginActivity : AppCompatActivity(){
         intent = Intent(this, ProblemasPrincipalesActivity2::class.java)
         bundle.putParcelableArrayList("menuProblematicas", problematicas1 as java.util.ArrayList<out Parcelable>)
         intent.putExtras(bundle)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 

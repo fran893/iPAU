@@ -1,7 +1,6 @@
 package com.example.fran.ipau.apis
 
 import com.example.fran.ipau.models.Login
-import com.example.fran.ipau.models.LoginK
 import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

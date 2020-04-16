@@ -14,6 +14,7 @@ class ProblematicasMapaFragmentViewModel : ViewModel() {
     private var saveLocationLiveData: MutableLiveData<ProblematicaLocation> = MutableLiveData()
     private var problematicaLocationLatLngLive: MutableLiveData<ProblematicaLocation> = MutableLiveData()
     private var updateCountProbLocationLive : MutableLiveData<ProblematicaLocation> = MutableLiveData()
+    private var updateProblematicaLive: MutableLiveData<ProblematicaLocation> = MutableLiveData()
     lateinit var repositoryMapaFragmet: MapaFragmentRepository
 
     fun addMarkersInit(problematicasLocations: List<ProblematicaLocation>) : ArrayList<MarkerOptions>{
@@ -65,6 +66,14 @@ class ProblematicasMapaFragmentViewModel : ViewModel() {
     }
     fun updateMarkerCountLocProb(idProb3: Long){
         updateCountProbLocationLive = repositoryMapaFragmet.updateCountMarkerProbLocation(idProb3)
+    }
+
+    fun getUpdateProblematicaLive(): MutableLiveData<ProblematicaLocation> {
+        return updateProblematicaLive
+    }
+
+    fun updateProblematica(idProbLocation: Long, problematicaLocation: ProblematicaLocation, token: String){
+        updateProblematicaLive = repositoryMapaFragmet.actualizarProblematica(idProbLocation, problematicaLocation, token)
     }
 
 }

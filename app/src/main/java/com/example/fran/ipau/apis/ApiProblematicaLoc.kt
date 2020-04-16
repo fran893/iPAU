@@ -26,4 +26,7 @@ interface ApiProblematicaLoc {
     @GET("api/probLocation/problematicasLocationPerPrivacy/{isPrivacy}/{idProb3}")
     fun getProblematicaLocByPrivacy(@Path("isPrivacy") isPrivacy: Boolean, @Path("idProb3") idProb3: Int): Single<List<ProblematicaLocation>>
 
+    @PUT("api/probLocation/updateProbLocation/{idProbLocation}")
+    fun updateProbLocation(@Path("idProbLocation") idProbLocation: Long, @Body problematicaLocation: ProblematicaLocation): Single<ProblematicaLocation>
+
 }

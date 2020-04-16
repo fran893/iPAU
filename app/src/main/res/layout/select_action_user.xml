@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_bg"
+    >
+
+    <Button
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:text="Re-Marcar Próblematica"
+        android:background="@drawable/bg_round"
+        android:layout_marginTop="10dp"
+        android:id="@+id/btn_remarcar"
+        />
+
+    <Button
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:text="Marcar como dudosa"
+        android:background="@drawable/bg_round"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/btn_marcarDudosa"
+        />
+
+
+</LinearLayout>

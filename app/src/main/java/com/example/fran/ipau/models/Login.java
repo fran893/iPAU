@@ -11,6 +11,7 @@ public class Login {
     private String correo;
     private String nombre;
     private String jti;
+    private String id;
 
     public Login() {}
 
@@ -84,5 +85,13 @@ public class Login {
 
     public void setJti(String jti) {
         this.jti = jti;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

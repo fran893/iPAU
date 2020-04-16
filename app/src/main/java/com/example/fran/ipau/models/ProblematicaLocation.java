@@ -8,6 +8,9 @@ public class ProblematicaLocation {
     private String descripcion;
     private Problematica3 problematica3;
     private Integer cantVecesMarcada;
+    private boolean esDudosa;
+    private String observacionUser;
+    private Long idUser;
 
     public ProblematicaLocation(){}
 
@@ -57,5 +60,29 @@ public class ProblematicaLocation {
 
     public void setCantVecesMarcada(Integer cantVecesMarcada) {
         this.cantVecesMarcada = cantVecesMarcada;
+    }
+
+    public boolean isEsDudosa() {
+        return esDudosa;
+    }
+
+    public void setEsDudosa(boolean esDudosa) {
+        this.esDudosa = esDudosa;
+    }
+
+    public String getObservacionUser() {
+        return observacionUser;
+    }
+
+    public void setObservacionUser(String observacionUser) {
+        this.observacionUser = observacionUser;
+    }
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 }

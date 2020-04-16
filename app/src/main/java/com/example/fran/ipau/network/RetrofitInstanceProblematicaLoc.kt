@@ -10,6 +10,8 @@ object RetrofitInstanceProblematicaLoc {
 
     private val BASE_URL_DESA = "http://192.168.1.106:8090/"
     private val BASE_URL = "http://ec2-3-14-28-90.us-east-2.compute.amazonaws.com:8090/" //test
+    private var retrofitInstanceAuth: Retrofit? = null
+    private var httpClientAuth: OkHttpClient? = null
 
     private val okHttpClient = OkHttpClient.Builder()
             .readTimeout(120, TimeUnit.SECONDS)
@@ -22,9 +24,11 @@ object RetrofitInstanceProblematicaLoc {
             .addInterceptor(BasicAuthInterceptor("ipau_app","IpauApp.Android2019"))
             .build()
 
+
+
     fun createApi(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_DESA)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
@@ -33,11 +37,28 @@ object RetrofitInstanceProblematicaLoc {
     
     fun createApiLogin(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_DESA)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientLogin)
                 .build()
+    }
+
+    fun getRetrofitInstanceAuth(token: String): Retrofit {
+        if(retrofitInstanceAuth == null) {
+            httpClientAuth = OkHttpClient.Builder()
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .connectTimeout(120, TimeUnit.SECONDS)
+                    .addInterceptor(TokenAuthInterceptor(token))
+                    .build()
+            retrofitInstanceAuth = Retrofit.Builder()
+                    .baseUrl(BASE_URL_DESA)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(httpClientAuth)
+                    .build()
+        }
+        return retrofitInstanceAuth!!
     }
 
 }

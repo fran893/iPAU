@@ -86,4 +86,23 @@ object MapaFragmentRepository{
         return location
     }
 
+    fun actualizarProblematica(idProblematicaLocation: Long, problematicaLocation: ProblematicaLocation, token: String): MutableLiveData<ProblematicaLocation> {
+        val location = MutableLiveData<ProblematicaLocation>()
+        //val retrofit = RetrofitInstanceProblematicaLoc.createApi()
+        val retrofit = RetrofitInstanceProblematicaLoc.getRetrofitInstanceAuth(token)
+        val service = retrofit.create(ApiProblematicaLoc::class.java)
+        service.updateProbLocation(idProblematicaLocation, problematicaLocation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy (
+                        onSuccess = {
+                            location.postValue(it)
+                        },
+                        onError = { error ->
+                            Log.d("Error", "Error al actualizar problematica "+error.message)
+                        }
+                )
+        return location
+    }
+
 }

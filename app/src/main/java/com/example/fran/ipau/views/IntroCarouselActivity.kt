@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import com.example.fran.ipau.R
 import com.example.fran.ipau.models.Problematica1
+import com.example.fran.ipau.utils.Utilidades
 import com.synnapps.carouselview.CarouselView
 import kotlinx.android.synthetic.main.activity_intro_carousel.*
 
@@ -73,7 +74,12 @@ class IntroCarouselActivity : AppCompatActivity() {
         var intent: Intent = intent
         var bundle = intent.extras
         problematicas1 = bundle.getParcelableArrayList("menuProblematicas")
-        intent = Intent(this, InitialActivity::class.java)
+        //Log.d("token", Utilidades.getToken(this).access_token)
+        if(Utilidades.getToken(this).access_token == "") {
+            intent = Intent(this, InitialActivity::class.java)
+        }else {
+            intent = Intent(this, ProblemasPrincipalesActivity2::class.java)
+        }
         bundle.putParcelableArrayList("menuProblematicas", problematicas1 as java.util.ArrayList<out Parcelable>)
         intent.putExtras(bundle)
         startActivity(intent)

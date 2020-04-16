@@ -98,14 +98,12 @@ class SubProblematicasActivity : AppCompatActivity(){
                 super.onDrawerOpened(drawerView)
                 //getSupportActionBar().setTitle("EDMTDev");
                 invalidateOptionsMenu()
-                Log.d("ABRIENDO", "SE ABREEEEEEEEEEEE")
             }
 
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 //getSupportActionBar().setTitle(mActivityTitle);
                 invalidateOptionsMenu()
-                Log.d("CERRANDO", "SE CIERRAAAAAAAAAAA")
             }
         }
 

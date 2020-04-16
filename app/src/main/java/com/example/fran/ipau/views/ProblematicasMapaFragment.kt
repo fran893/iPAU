@@ -43,8 +43,10 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.*
 import kotlinx.android.synthetic.main.activity_problematicas_mapa.view.*
 import kotlinx.android.synthetic.main.desc_problematica_location.view.*
+import kotlinx.android.synthetic.main.marcar_problematica_dudosa.view.*
 import kotlinx.android.synthetic.main.probress_bar_loading.*
 import kotlinx.android.synthetic.main.probress_bar_loading.view.*
+import kotlinx.android.synthetic.main.select_action_user.view.*
 import kotlinx.android.synthetic.main.view_alert_dialog_add_problematica.view.descripcionProblematica
 import kotlinx.android.synthetic.main.view_alert_dialog_error_problematica.view.*
 import java.util.*
@@ -69,7 +71,6 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     private lateinit var alertaPermisosAlertDialog: AlertDialog
     private lateinit var alertDialogMarkerProb: AlertDialog
     private lateinit var viewAlertDialog: View
-    private lateinit var viewAlertDialogErrorProblematica : View
     private lateinit var alertDialogSelectLayoutMap: AlertDialog
     private lateinit var viewAlertDialogSelectLayoutMap: View
     private lateinit var viewDescProbLocation: View
@@ -81,54 +82,15 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
     private lateinit var progressLoadinSuccessDialog: AlertDialog
     private lateinit var viewAlertPorgressLoadingSuccess: View
     private lateinit var viewAlertDialogError: View
+    private lateinit var viewSelectActionUser: View
+    private lateinit var selectActionUserAlertDialog: AlertDialog
+    private lateinit var viewMarcarDudosa: View
+    private lateinit var marcarDudosaAlerDialog: AlertDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.activity_problematicas_mapa, container, false)
         viewModel = ViewModelProviders.of(this)[ProblematicasMapaFragmentViewModel::class.java]
-        viewAlertDialog = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_add_problematica, null)
-        problematicaDialogAlert = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Agregar Problemática")
-                .setView(viewAlertDialog)
-                .setPositiveButton("Si", DialogInterface.OnClickListener {_, _ ->
-                    guardarMarcadorProblematica()
-                })
-                .create()
-        viewAlertDialogErrorProblematica = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_error_problematica,null)
-        viewAlertDialogError = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_error_problematica, null)
-        errorProblematicaDialogAlert = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Error")
-                .setIcon(R.drawable.ic_error_24dp)
-                .setView(viewAlertDialogError)
-                .create()
-        alertDialogSelectLayoutMap = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Tipo de Mapa")
-                .create()
-        alertaPermisosAlertDialog = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Permisos de Ubicación iPau")
-                .setMessage("Para que la aplicación pueda mostrar su ubicacion actual" +
-                        " necesita que se le concedan los permisos de Ubicación. Para eso" +
-                        " ingrese a las opciones de permisos de la app")
-                .setPositiveButton("Ir a permisos de app", DialogInterface.OnClickListener{_,_ ->
-                    var intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    var uri: Uri = Uri.fromParts("package", activity!!.packageName,null)
-                    intent.data = uri
-                    activity!!.startActivity(intent)
-                })
-                .create()
-        alertDialogNoInternet = AlertDialog.Builder(this.activity!!)
-                .setCancelable(true)
-                .setTitle("Sin Internet")
-                .setMessage("Debe haber conexión a internet")
-                .create()
-        viewAlertPorgressLoadingSuccess = LayoutInflater.from(this.activity).inflate(R.layout.probress_bar_loading, null)
-        progressLoadinSuccessDialog = AlertDialog.Builder(this.activity!!)
-                .setCancelable(false)
-                .setView(viewAlertPorgressLoadingSuccess)
-                .create()
+        createAlerts()
 
         val rxPermissions = RxPermissions(this)
         mView.setUbicacion.setOnClickListener {
@@ -146,6 +108,46 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
                         }
                     }
         }
+
+        mView.setLayout.setOnClickListener {
+            alertDialogSelectLayoutMap.show()
+        }
+
+        return mView
+    }
+
+    fun createAlerts(){
+        //Alerta que pregunta antes de guardar problematica
+        viewAlertDialog = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_add_problematica, null)
+        problematicaDialogAlert = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Agregar Problemática")
+                .setView(viewAlertDialog)
+                .setPositiveButton("Si", DialogInterface.OnClickListener {_, _ ->
+                    guardarMarcadorProblematica()
+                })
+                .create()
+        //alerta de error
+        viewAlertDialogError = LayoutInflater.from(this.activity).inflate(R.layout.view_alert_dialog_error_problematica, null)
+        errorProblematicaDialogAlert = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Error")
+                .setIcon(R.drawable.ic_error_24dp)
+                .setView(viewAlertDialogError)
+                .create()
+        //Alerta que informa que no hay internet
+        alertDialogNoInternet = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Sin Internet")
+                .setMessage("Debe haber conexión a internet")
+                .create()
+        //Alerta de carga de info
+        viewAlertPorgressLoadingSuccess = LayoutInflater.from(this.activity).inflate(R.layout.probress_bar_loading, null)
+        progressLoadinSuccessDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(false)
+                .setView(viewAlertPorgressLoadingSuccess)
+                .create()
+        //Alerta de problematica ya marcada
         viewDescProbLocation = LayoutInflater.from(this.activity).inflate(R.layout.desc_problematica_location,null)
         alertDialogMarkerProb = AlertDialog.Builder(this.activity!!)
                 .setCancelable(true)
@@ -159,12 +161,26 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
 
                 })
                 .create()
+        //Alerta de permisos
+        alertaPermisosAlertDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Permisos de Ubicación iPau")
+                .setMessage("Para que la aplicación pueda mostrar su ubicacion actual" +
+                        " necesita que se le concedan los permisos de Ubicación. Para eso" +
+                        " ingrese a las opciones de permisos de la app")
+                .setPositiveButton("Ir a permisos de app", DialogInterface.OnClickListener{_,_ ->
+                    var intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    var uri: Uri = Uri.fromParts("package", activity!!.packageName,null)
+                    intent.data = uri
+                    activity!!.startActivity(intent)
+                })
+                .create()
+        //alerta de elegir layout de mapa
         viewAlertDialogSelectLayoutMap = LayoutInflater.from(this.activity).inflate(R.layout.view_select_layout_map,null)
-        mView.setLayout.setOnClickListener {
-            alertDialogSelectLayoutMap.show()
-
-        }
-
+        alertDialogSelectLayoutMap = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Tipo de Mapa")
+                .create()
         alertDialogSelectLayoutMap.setView(viewAlertDialogSelectLayoutMap)
         var rdGroup = viewAlertDialogSelectLayoutMap.findViewById<RadioGroup>(R.id.selectLayout)
         var tipoSatelite = viewAlertDialogSelectLayoutMap.findViewById<RadioButton>(R.id.tipoSatelite)
@@ -176,21 +192,20 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
             else if(checkedId == tipoPredeterminado.id)
                 mMap.mapType =  GoogleMap.MAP_TYPE_NORMAL
         }
-        return mView
-    }
-
-    fun getToken(): Login {
-        var login = Login()
-        val sharedPref = this.activity?.getSharedPreferences("login",Context.MODE_PRIVATE)
-        val token = sharedPref!!.getString("token","")
-        val nombreUser = sharedPref!!.getString("nombre_user","")
-        val apellido_user = sharedPref!!.getString("apellido_user","")
-        val correo_user = sharedPref!!.getString("correo_user","")
-        login.access_token = token
-        login.nombre = nombreUser
-        login.apellido = apellido_user
-        login.correo = correo_user
-        return login
+        //alert de seleccion de accion para usuario
+        viewSelectActionUser = LayoutInflater.from(this.activity).inflate(R.layout.select_action_user, null)
+        selectActionUserAlertDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Elija una acción")
+                .setView(viewSelectActionUser)
+                .create()
+        //alert para marcar problematica como dudosa
+        viewMarcarDudosa = LayoutInflater.from(this.activity).inflate(R.layout.marcar_problematica_dudosa, null)
+        marcarDudosaAlerDialog = AlertDialog.Builder(this.activity!!)
+                .setCancelable(true)
+                .setTitle("Marcar como dudosa")
+                .setView(viewMarcarDudosa)
+                .create()
     }
 
     override fun onResume() {
@@ -379,11 +394,73 @@ class ProblematicasMapaFragment  : Fragment(), OnMapReadyCallback, GoogleMap.OnM
         var lngMarker: Double = marker!!.position.longitude
         viewModel.getLocation(latMarker, lngMarker)
         viewModel.getProblematicaLocationLatLngLive().observe(this ,Observer<ProblematicaLocation> {location ->
-            closeLoadModal();
-            problematicaLocation = location!!
-            viewDescProbLocation.descProblematica.text = problematicaLocation.descripcion
-            viewDescProbLocation.countMarker.text = problematicaLocation.cantVecesMarcada.toString()
-            alertDialogMarkerProb.show()
+            closeLoadModal()
+            var login = Utilidades.getToken(this.activity!!)
+            if(login.access_token != ""){
+                selectActionUserAlertDialog.show()
+                viewSelectActionUser.btn_remarcar.setOnClickListener {
+                    selectActionUserAlertDialog.dismiss()
+                    problematicaLocation = location!!
+                    viewDescProbLocation.descProblematica.text = problematicaLocation.descripcion
+                    viewDescProbLocation.countMarker.text = problematicaLocation.cantVecesMarcada.toString()
+                    alertDialogMarkerProb.show()
+                }
+                viewSelectActionUser.btn_marcarDudosa.setOnClickListener {
+
+                    selectActionUserAlertDialog.dismiss()
+                    marcarDudosaAlerDialog.show()
+                    viewMarcarDudosa.checkBoxDudosa.isChecked = location?.isEsDudosa!!
+                    if(!viewMarcarDudosa.checkBoxDudosa.isChecked) {
+                        viewMarcarDudosa.layout_marcarDudosa.visibility = View.GONE
+                    }else{
+                        viewMarcarDudosa.layout_marcarDudosa.visibility = View.VISIBLE
+                        var observacionUser = location?.observacionUser!!
+                        viewMarcarDudosa.et_observacionUser.setText(observacionUser)
+                    }
+                    viewMarcarDudosa.checkBoxDudosa.setOnCheckedChangeListener { _, isChecked ->
+                        if(isChecked){
+                            viewMarcarDudosa.layout_marcarDudosa.visibility = View.VISIBLE
+                        }else{
+                            viewMarcarDudosa.layout_marcarDudosa.visibility = View.GONE
+                        }
+                    }
+
+                    viewMarcarDudosa.btn_actualizarMarcaDudosa.setOnClickListener {
+                        if(viewMarcarDudosa.checkBoxDudosa.isChecked){
+                            openLoadModal("Marcando problemática como dudosa")
+
+                            location?.isEsDudosa = viewMarcarDudosa.checkBoxDudosa.isChecked
+                            location?.observacionUser = viewMarcarDudosa.et_observacionUser.text.toString()
+                            marcarDudosaAlerDialog.dismiss()
+                            location.idUser = Integer.parseInt(login.id).toLong()
+                            viewModel.updateProblematica(location?.idProblematicaLocation.toLong(), location, login.access_token)
+                            viewModel.getUpdateProblematicaLive().observe(this, Observer<ProblematicaLocation> { location ->
+                                addOptionOkLoadModal("Problemática actualizada con éxito")
+                                viewMarcarDudosa.et_observacionUser.setText("")
+                            })
+                        }
+                    }
+
+                    viewMarcarDudosa.btn_quitarMarca.setOnClickListener {
+                        if(viewMarcarDudosa.checkBoxDudosa.isChecked) {
+                            openLoadModal("Quitando marca dudosa")
+                            location?.isEsDudosa = false
+                            marcarDudosaAlerDialog.dismiss()
+                            location.idUser = Integer.parseInt(login.id).toLong()
+                            viewModel.updateProblematica(location?.idProblematicaLocation.toLong(), location, login.access_token)
+                            viewModel.getUpdateProblematicaLive().observe(this, Observer<ProblematicaLocation> { location ->
+                                addOptionOkLoadModal("Marca quitada con éxito")
+                            })
+                        }
+                    }
+                }
+            }else{
+                problematicaLocation = location!!
+                viewDescProbLocation.descProblematica.text = problematicaLocation.descripcion
+                viewDescProbLocation.countMarker.text = problematicaLocation.cantVecesMarcada.toString()
+                alertDialogMarkerProb.show()
+            }
+
         })
 
         return true
