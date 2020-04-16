@@ -50,19 +50,25 @@ class LoginActivity : AppCompatActivity(){
                 //progress.window.setLayout(600,400)
                 viewModel.login(email,password)
                 viewModel.getData().observe(this, Observer<Login>{ loginSuccess ->
-                    Log.d("TOKEN","TOKEN "+loginSuccess?.access_token)
-                    val sharedPref = this?.getSharedPreferences("login",Context.MODE_PRIVATE)
-                    var editor = sharedPref.edit()
-                    editor.putString("token",loginSuccess?.access_token)
-                    editor.putString("nombre_user",loginSuccess?.nombre)
-                    editor.putString("apellido_user",loginSuccess?.apellido)
-                    editor.putString("correo_user",loginSuccess?.correo)
-                    editor.putString("id_user", loginSuccess?.id)
-                    Log.d("id_user ",loginSuccess?.id)
-                    Log.d("id_correo ",loginSuccess?.correo)
-                    editor.commit()
-                    progress.dismiss()
-                    goToMenu()
+                    Log.d("HTTP ERROR ","LLEGA CON ERROR")
+                    if(loginSuccess?.access_token != null) {
+                        Log.d("TOKEN", "TOKEN " + loginSuccess?.access_token)
+                        val sharedPref = this?.getSharedPreferences("login", Context.MODE_PRIVATE)
+                        var editor = sharedPref.edit()
+                        editor.putString("token", loginSuccess?.access_token)
+                        editor.putString("nombre_user", loginSuccess?.nombre)
+                        editor.putString("apellido_user", loginSuccess?.apellido)
+                        editor.putString("correo_user", loginSuccess?.correo)
+                        editor.putString("id_user", loginSuccess?.id)
+                        Log.d("id_user ", loginSuccess?.id)
+                        Log.d("id_correo ", loginSuccess?.correo)
+                        editor.commit()
+                        progress.dismiss()
+                        goToMenu()
+                    }else{
+                        progress.dismiss()
+                        Toast.makeText(this, "Email y/o contraseña incorrectos", Toast.LENGTH_LONG).show()
+                    }
 
                 })
             }
@@ -79,6 +85,7 @@ class LoginActivity : AppCompatActivity(){
         intent = Intent(this, ProblemasPrincipalesActivity2::class.java)
         bundle.putParcelableArrayList("menuProblematicas", problematicas1 as java.util.ArrayList<out Parcelable>)
         intent.putExtras(bundle)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }

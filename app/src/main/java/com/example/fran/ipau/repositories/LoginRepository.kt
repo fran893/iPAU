@@ -28,6 +28,7 @@ object LoginRepository {
                         },
                         onError = {error->
                             Log.d("ERROR *** ","Error: "+error.message)
+                            login.postValue(Login())
                         }
                 )
         return login
